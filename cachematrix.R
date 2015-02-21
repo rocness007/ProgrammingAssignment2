@@ -1,7 +1,9 @@
 # The first function creates a special "matrix" object that can cache its inverse.
 
 # This function creates a special "matrix" object that can cache its inverse.
-# This function also allows the user to set a new matrix and get a new matrix
+# This function also allows the user to set a new matrix using the set function that is inherited through the 
+# makeCacheMatrix function and also get a matrix that has been provided to the makeCahceMatrix funtion by using the
+# get function also inheritied by the makeCacheMatrix funtion.
 
 makeCacheMatrix <- function(x = matrix()) {
         m <- NULL
@@ -10,11 +12,11 @@ makeCacheMatrix <- function(x = matrix()) {
                 m <<- NULL
         }
         get <- function() x
-        setInverse <- function(solve) m <<- solve
-        getInverse <- function() m
+        setMatrix <- function(solve) m <<- solve
+        getMatrix <- function() m
         list(set = set, get = get,
-             setInverse = setInverse,
-             getInverse = getInverse)
+             setMatrix = setMatrix,
+             getMatrix = getMatrix)
 
 }
 
@@ -25,27 +27,27 @@ makeCacheMatrix <- function(x = matrix()) {
 cacheSolve <- function(x, ...) {
         ## Return a matrix that is the inverse of 'x'
         
-        m <- x$getInverse()
+        m <- x$getMatrix()
         if(!is.null(m)) {
                 message("getting cached data")
                 return(m)
         }
         data <- x$get()
         m <- solve(data, ...)
-        x$setInverse(m)
+        x$setMatrix(m)
         m
 }
 
-# #This checks the code to ensure it works correctly
-# size = 1000
-# x <- matrix(rnorm(size^2), nrow=size, ncol=size)
-# xx <- makeCacheMatrix(x)
-# cacheSolve(xx)
-# cacheSolve(xx)
-# xx$get() %*% cacheSolve(xx)
-# xx$set(matrix(rnorm(size^2), nrow=size, ncol=size))
-# xx$get()
-# cacheSolve(xx)
-# cacheSolve(xx)
-# xx$get() %*% cacheSolve(xx)
+#This checks the code to ensure it works correctly
+size = 10
+x <- matrix(rnorm(size^2), nrow=size, ncol=size)
+xx <- makeCacheMatrix(x)
+cacheSolve(xx)
+cacheSolve(xx)
+xx$get() %*% cacheSolve(xx)
+xx$set(matrix(rnorm(size^2), nrow=size, ncol=size))
+xx$get()
+cacheSolve(xx)
+cacheSolve(xx)
+xx$get() %*% cacheSolve(xx)
 
